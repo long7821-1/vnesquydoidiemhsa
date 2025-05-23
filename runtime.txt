@@ -1,1 +1,4 @@
-python-3.11.9
+__pycache__/
+*.pyc
+.env
+venv/
