@@ -4,6 +4,7 @@ import os
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Thay bằng chuỗi bí mật an toàn
 
+# Dữ liệu quy đổi HSA sang THPT
 csv_data = {
     129: {"A00": 29.27, "B00": 28.97, "C00": 29.75, "D01": 28.65, "A01": 29.12},
     128: {"A00": 29.21, "B00": 28.97, "C00": 29.64, "D01": 29.04, "A01": 29.18},
@@ -118,21 +119,13 @@ csv_data = {
     19: {"A00": 9.88, "B00": 9.89, "C00": 13.86, "D01": 11.71, "A01": 9.46},
     18: {"A00": 9.67, "B00": 9.69, "C00": 13.68, "D01": 11.51, "A01": 9.23},
     17: {"A00": 9.45, "B00": 9.50, "C00": 13.50, "D01": 11.30, "A01": 9.00}
-
 }
 
 def convert_hsa_to_thpt(hsa_score):
     try:
-        hsa_rounded = round(hsa_score)
-        if hsa_rounded in df["HSA"].values:
-            row = df[df["HSA"] == hsa_rounded].iloc[0]
-            return {
-                "A00": row["A00"],
-                "B00": row["B00"],
-                "C00": row["C00"],
-                "D01": row["D01"],
-                "A01": row["A01"]
-            }
+        hsa_rounded = round(float(hsa_score))  # Làm tròn điểm HSA
+        if hsa_rounded in csv_data:
+            return csv_data[hsa_rounded]
         else:
             return {"error": f"Không có dữ liệu cho điểm HSA {hsa_rounded}"}
     except Exception as e:
@@ -156,3 +149,7 @@ def index():
             result = {"error": "Vui lòng nhập điểm hợp lệ"}
 
     return render_template("index.html", result=result, last_hsa_score=last_hsa_score)
+
+if __name__ == "__main__":
+    port = int(os.environ.get('PORT', 5000))
+    app.run(host='0.0.0.0', port=port)
