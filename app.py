@@ -1,4 +1,5 @@
 from flask import Flask, render_template, request, session
+import os
 
 app = Flask(__name__)
 app.secret_key = 'your_secret_key_here'  # Thay bằng chuỗi bí mật an toàn
